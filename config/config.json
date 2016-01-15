@@ -108,6 +108,19 @@
         "TokenEndpoint": "",
         "UserApiEndpoint": ""
     },
+    "OAuthSettings": {
+        "Enable": false,
+        "ProviderName": "",
+        "Secret": "",
+        "Id": "",
+        "Scope": "",
+        "AuthEndpoint": "",
+        "TokenEndpoint": "",
+        "UserApiEndpoint": "",
+        "UsernameField": "",
+        "EmailField": "",
+        "AuthDataField": ""
+    },
     "GoogleSettings": {
         "Enable": false,
         "Secret": "",
@@ -132,3 +145,4 @@
         "QueryTimeout": 60
     }
 }
+

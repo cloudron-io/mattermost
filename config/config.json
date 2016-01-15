@@ -108,6 +108,15 @@
         "TokenEndpoint": "",
         "UserApiEndpoint": ""
     },
+    "OAuthSettings": {
+        "Enable": false,
+        "Secret": "",
+        "Id": "",
+        "Scope": "",
+        "AuthEndpoint": "",
+        "TokenEndpoint": "",
+        "UserApiEndpoint": ""
+    },
     "GoogleSettings": {
         "Enable": false,
         "Secret": "",
@@ -132,3 +141,4 @@
         "QueryTimeout": 60
     }
 }
+

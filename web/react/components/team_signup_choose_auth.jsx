@@ -44,6 +44,24 @@ export default class ChooseAuthPage extends React.Component {
             );
         }
 
+        if (global.window.mm_config.EnableSignUpWithCloudron === 'true') {
+            buttons.push(
+                    <a
+                        className='btn btn-custom-login cloudron btn-full'
+                        href='#'
+                        onClick={
+                            (e) => {
+                                e.preventDefault();
+                                this.props.updatePage('cloudron');
+                            }
+                        }
+                    >
+                        <span className='icon' />
+                        <span>{'Create new team with Cloudron Account'}</span>
+                    </a>
+            );
+        }
+
         if (global.window.mm_config.EnableSignUpWithEmail === 'true') {
             buttons.push(
                     <a

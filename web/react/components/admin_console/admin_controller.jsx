@@ -15,6 +15,7 @@ import FileSettingsTab from './image_settings.jsx';
 import PrivacySettingsTab from './privacy_settings.jsx';
 import RateSettingsTab from './rate_settings.jsx';
 import GitLabSettingsTab from './gitlab_settings.jsx';
+import CloudronSettingsTab from './cloudron_settings.jsx';
 import SqlSettingsTab from './sql_settings.jsx';
 import TeamSettingsTab from './team_settings.jsx';
 import ServiceSettingsTab from './service_settings.jsx';
@@ -145,6 +146,8 @@ export default class AdminController extends React.Component {
                 tab = <RateSettingsTab config={this.state.config} />;
             } else if (this.state.selected === 'gitlab_settings') {
                 tab = <GitLabSettingsTab config={this.state.config} />;
+            } else if (this.state.selected === 'cloudron_settings') {
+                tab = <CloudronSettingsTab config={this.state.config} />;
             } else if (this.state.selected === 'sql_settings') {
                 tab = <SqlSettingsTab config={this.state.config} />;
             } else if (this.state.selected === 'team_settings') {

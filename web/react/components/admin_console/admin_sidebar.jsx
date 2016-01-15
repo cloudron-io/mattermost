@@ -282,6 +282,15 @@ export default class AdminSidebar extends React.Component {
                                             {'GitLab Settings'}
                                         </a>
                                     </li>
+                                    <li>
+                                        <a
+                                            href='#'
+                                            className={this.isSelected('cloudron_settings')}
+                                            onClick={this.handleClick.bind(this, 'cloudron_settings', null)}
+                                        >
+                                            {'Cloudron Settings'}
+                                        </a>
+                                    </li>
                                     {ldapSettings}
                                     <li>
                                         <a

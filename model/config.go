@@ -19,8 +19,9 @@ const (
 	DATABASE_DRIVER_MYSQL    = "mysql"
 	DATABASE_DRIVER_POSTGRES = "postgres"
 
-	SERVICE_GITLAB = "gitlab"
-	SERVICE_GOOGLE = "google"
+	SERVICE_GITLAB   = "gitlab"
+	SERVICE_GOOGLE   = "google"
+	SERVICE_CLOUDRON = "cloudron"
 )
 
 type ServiceSettings struct {
@@ -174,6 +175,7 @@ type Config struct {
 	SupportSettings   SupportSettings
 	GitLabSettings    SSOSettings
 	GoogleSettings    SSOSettings
+	CloudronSettings  SSOSettings
 	LdapSettings      LdapSettings
 }
 
@@ -192,6 +194,8 @@ func (o *Config) GetSSOService(service string) *SSOSettings {
 		return &o.GitLabSettings
 	case SERVICE_GOOGLE:
 		return &o.GoogleSettings
+	case SERVICE_CLOUDRON:
+		return &o.CloudronSettings
 	}
 
 	return nil

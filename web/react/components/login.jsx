@@ -42,6 +42,18 @@ export default class Login extends React.Component {
            );
         }
 
+        if (global.window.mm_config.EnableSignUpWithCloudron === 'true') {
+            loginMessage.push(
+                    <a
+                        className='btn btn-custom-login cloudron'
+                        href={'/' + teamName + '/login/cloudron'}
+                    >
+                        <span className='icon' />
+                        <span>{'with Cloudron'}</span>
+                    </a>
+           );
+        }
+
         const extraParam = Utils.getUrlParameter('extra');
         let extraBox = '';
         if (extraParam) {

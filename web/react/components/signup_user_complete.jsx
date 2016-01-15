@@ -200,6 +200,18 @@ export default class SignupUserComplete extends React.Component {
            );
         }
 
+        if (global.window.mm_config.EnableSignUpWithCloudron === 'true') {
+            signupMessage.push(
+                <a
+                    className='btn btn-custom-login cloudron'
+                    href={'/' + this.props.teamName + '/signup/cloudron' + window.location.search}
+                >
+                    <span className='icon' />
+                    <span>{'with Cloudron'}</span>
+                </a>
+           );
+        }
+
         var emailSignup;
         if (global.window.mm_config.EnableSignUpWithEmail === 'true') {
             emailSignup = (

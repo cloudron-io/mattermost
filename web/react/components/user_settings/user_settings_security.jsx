@@ -260,6 +260,21 @@ export default class SecurityTab extends React.Component {
                 );
             }
 
+            let qtOption;
+            if (global.window.mm_config.EnableSignUpWithQt === 'true' && user.auth_service === '') {
+                qtOption = (
+                    <div>
+                        <a
+                            className='btn btn-primary'
+                            href={'/' + teamName + '/claim?email=' + user.email + '&new_type=' + Constants.QT_SERVICE}
+                        >
+                            {'Switch to using Qt SSO'}
+                        </a>
+                        <br/>
+                    </div>
+                );
+            }
+
             inputs.push(
                 <div key='userSignInOption'>
                    {emailOption}
@@ -268,6 +283,8 @@ export default class SecurityTab extends React.Component {
                    {googleOption}
                    <br/>
                    {cloudronOption}
+                   <br/>
+                   {qtOption}
                 </div>
             );
 
@@ -299,6 +316,8 @@ export default class SecurityTab extends React.Component {
             describe = 'GitLab SSO';
         } else if (this.props.user.auth_service === Constants.CLOUDRON_SERVICE) {
             describe = 'Cloudron SSO';
+        } else if (this.props.user.auth_service === Constants.QT_SERVICE) {
+            describe = 'Qt SSO';
         }
 
         return (
@@ -317,6 +336,7 @@ export default class SecurityTab extends React.Component {
         numMethods = global.window.mm_config.EnableSignUpWithGitLab === 'true' ? numMethods + 1 : numMethods;
         numMethods = global.window.mm_config.EnableSignUpWithGoogle === 'true' ? numMethods + 1 : numMethods;
         numMethods = global.window.mm_config.EnableSignUpWithCloudron === 'true' ? numMethods + 1 : numMethods;
+        numMethods = global.window.mm_config.EnableSignUpWithQt === 'true' ? numMethods + 1 : numMethods;
 
         if (global.window.mm_config.EnableSignUpWithEmail && numMethods > 0) {
             signInSection = this.createSignInSection();

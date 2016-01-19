@@ -62,6 +62,24 @@ export default class ChooseAuthPage extends React.Component {
             );
         }
 
+        if (global.window.mm_config.EnableSignUpWithQt === 'true') {
+            buttons.push(
+                    <a
+                        className='btn btn-custom-login qt btn-full'
+                        href='#'
+                        onClick={
+                            (e) => {
+                                e.preventDefault();
+                                this.props.updatePage('qt');
+                            }
+                        }
+                    >
+                        <span className='icon' />
+                        <span>{'Create new team with Qt Account'}</span>
+                    </a>
+            );
+        }
+
         if (global.window.mm_config.EnableSignUpWithEmail === 'true') {
             buttons.push(
                     <a

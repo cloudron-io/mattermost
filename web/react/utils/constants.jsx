@@ -117,6 +117,7 @@ export default {
     GITLAB_SERVICE: 'gitlab',
     GOOGLE_SERVICE: 'google',
     CLOUDRON_SERVICE: 'cloudron',
+    QT_SERVICE: 'qt',
     EMAIL_SERVICE: 'email',
     SIGNIN_CHANGE: 'signin_change',
     SIGNIN_VERIFIED: 'verified',

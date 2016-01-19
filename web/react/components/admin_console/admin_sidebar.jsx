@@ -291,6 +291,15 @@ export default class AdminSidebar extends React.Component {
                                             {'Cloudron Settings'}
                                         </a>
                                     </li>
+                                    <li>
+                                        <a
+                                            href='#'
+                                            className={this.isSelected('qt_settings')}
+                                            onClick={this.handleClick.bind(this, 'qt_settings', null)}
+                                        >
+                                            {'Qt Settings'}
+                                        </a>
+                                    </li>
                                     {ldapSettings}
                                     <li>
                                         <a

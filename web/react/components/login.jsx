@@ -54,6 +54,18 @@ export default class Login extends React.Component {
            );
         }
 
+        if (global.window.mm_config.EnableSignUpWithQt === 'true') {
+            loginMessage.push(
+                    <a
+                        className='btn btn-custom-login qt'
+                        href={'/' + teamName + '/login/qt'}
+                    >
+                        <span className='icon' />
+                        <span>{'with Qt'}</span>
+                    </a>
+           );
+        }
+
         const extraParam = Utils.getUrlParameter('extra');
         let extraBox = '';
         if (extraParam) {

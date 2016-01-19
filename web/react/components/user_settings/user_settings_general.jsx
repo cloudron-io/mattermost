@@ -513,6 +513,16 @@ export default class UserSettingsGeneralTab extends React.Component {
                         {helpText}
                     </div>
                 );
+            } else if (this.props.user.auth_service === Constants.QT_SERVICE) {
+                inputs.push(
+                    <div
+                        key='oauthEmailInfo'
+                        className='form-group'
+                    >
+                        <div className='setting-list__hint'>{'Log in occurs through Qt. Email cannot be updated.'}</div>
+                        {helpText}
+                    </div>
+                );
             }
 
             emailSection = (
@@ -545,6 +555,8 @@ export default class UserSettingsGeneralTab extends React.Component {
                 describe = 'Log in done through GitLab';
             } else if (this.props.user.auth_service === Constants.CLOUDRON_SERVICE) {
                 describe = 'Log in done through Cloudron';
+            } else if (this.props.user.auth_service === Constants.QT_SERVICE) {
+                describe = 'Log in done through Qt';
             }
 
             emailSection = (

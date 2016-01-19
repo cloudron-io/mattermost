@@ -22,6 +22,7 @@ const (
 	SERVICE_GITLAB   = "gitlab"
 	SERVICE_GOOGLE   = "google"
 	SERVICE_CLOUDRON = "cloudron"
+	SERVICE_QT       = "qt"
 )
 
 type ServiceSettings struct {
@@ -176,6 +177,7 @@ type Config struct {
 	GitLabSettings    SSOSettings
 	GoogleSettings    SSOSettings
 	CloudronSettings  SSOSettings
+	QtSettings        SSOSettings
 	LdapSettings      LdapSettings
 }
 
@@ -196,6 +198,8 @@ func (o *Config) GetSSOService(service string) *SSOSettings {
 		return &o.GoogleSettings
 	case SERVICE_CLOUDRON:
 		return &o.CloudronSettings
+	case SERVICE_QT:
+		return &o.QtSettings
 	}
 
 	return nil

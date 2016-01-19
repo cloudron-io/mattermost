@@ -212,6 +212,18 @@ export default class SignupUserComplete extends React.Component {
            );
         }
 
+        if (global.window.mm_config.EnableSignUpWithQt === 'true') {
+            signupMessage.push(
+                <a
+                    className='btn btn-custom-login qt'
+                    href={'/' + this.props.teamName + '/signup/qt' + window.location.search}
+                >
+                    <span className='icon' />
+                    <span>{'with Qt'}</span>
+                </a>
+           );
+        }
+
         var emailSignup;
         if (global.window.mm_config.EnableSignUpWithEmail === 'true') {
             emailSignup = (

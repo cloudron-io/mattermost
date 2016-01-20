@@ -255,16 +255,16 @@ func getClientConfig(c *model.Config) map[string]interface{} {
 	if c.OAuthSettings != nil {
 		props["EnableSignUpWithOAuth"] = strconv.FormatBool(true)
 
-		var providerNames []string
+		providers := make(map[string]string)
 		for providerName, _ := range c.OAuthSettings {
 			provider := einterfaces.GetOauthProvider(providerName)
 			if provider == nil {
 				continue
 			}
 			customOAuthProvider := provider.(*oauth.OAuthProvider)
-			providerNames = append(providerNames, customOAuthProvider.DisplayName)
+			providers[providerName] = customOAuthProvider.DisplayName
 		}
-		props["OAuthProviderDisplayNames"] = providerNames
+		props["CustomOAuthProviders"] = providers
 	} else {
 		props["EnableSignUpWithOAuth"] = strconv.FormatBool(false)
 	}

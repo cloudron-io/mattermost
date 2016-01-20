@@ -22,6 +22,10 @@ export default class TeamSignUp extends React.Component {
             count = count + 1;
         }
 
+        if (global.window.mm_config.EnableSignUpWithOAuth === 'true') {
+            count = count + Object.keys(global.window.mm_config.CustomOAuthProviders).length
+        }
+
         if (count > 1) {
             this.state = {page: 'choose'};
         } else if (global.window.mm_config.EnableSignUpWithEmail === 'true') {
@@ -123,6 +127,13 @@ export default class TeamSignUp extends React.Component {
             );
         } else if (this.state.page === 'none') {
             return (<div>{'No team creation method has been enabled.  Please contact an administrator for access.'}</div>);
+        } else if (this.state.page in global.window.mm_config.CustomOAuthProviders) {
+            return (
+                <div>
+                    {teamListing}
+                    <SSOSignupPage service={this.state.page} />
+                </div>
+            )
         }
     }
 }

@@ -522,7 +522,7 @@ func doLoadChannel(c *api.Context, w http.ResponseWriter, r *http.Request, team 
 	}
 
 	page := NewHtmlTemplatePage("channel", "")
-	page.Props["Title"] = channel.DisplayName + " - " + team.DisplayName + " " + page.ClientCfg["SiteName"]
+	page.Props["Title"] = channel.DisplayName + " - " + team.DisplayName + " " + page.ClientCfg["SiteName"].(string)
 	page.Props["TeamDisplayName"] = team.DisplayName
 	page.Props["ChannelName"] = channel.Name
 	page.Props["ChannelId"] = channel.Id
@@ -637,7 +637,7 @@ func resetPassword(c *api.Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	page := NewHtmlTemplatePage("password_reset", "")
-	page.Props["Title"] = "Reset Password " + page.ClientCfg["SiteName"]
+	page.Props["Title"] = "Reset Password " + page.ClientCfg["SiteName"].(string)
 	page.Props["TeamDisplayName"] = teamDisplayName
 	page.Props["TeamName"] = teamName
 	page.Props["Hash"] = hash

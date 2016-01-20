@@ -25,11 +25,21 @@ const (
 	LOG_ROTATE_SIZE = 10000
 )
 
+type ClientConfig map[string]interface{}
+
 var Cfg *model.Config = &model.Config{}
 var CfgDiagnosticId = ""
 var CfgLastModified int64 = 0
 var CfgFileName string = ""
-var ClientCfg map[string]string = map[string]string{}
+var ClientCfg ClientConfig = map[string]interface{}{}
+
+func (cfg *ClientConfig) ToJson() string {
+	if b, err := json.Marshal(cfg); err != nil {
+		return ""
+	} else {
+		return string(b)
+	}
+}
 
 func FindConfigFile(fileName string) string {
 	if _, err := os.Stat("/tmp/" + fileName); err == nil {
@@ -209,8 +219,8 @@ func LoadConfig(fileName string) {
 	ClientCfg = getClientConfig(Cfg)
 }
 
-func getClientConfig(c *model.Config) map[string]string {
-	props := make(map[string]string)
+func getClientConfig(c *model.Config) map[string]interface{} {
+	props := make(map[string]interface{})
 
 	props["Version"] = model.CurrentVersion
 	props["BuildNumber"] = model.BuildNumber
@@ -241,7 +251,23 @@ func getClientConfig(c *model.Config) map[string]string {
 
 	props["EnableSignUpWithGitLab"] = strconv.FormatBool(c.GitLabSettings.Enable)
 	props["EnableSignUpWithGoogle"] = strconv.FormatBool(c.GoogleSettings.Enable)
-	props["EnableSignUpWithOAuth"] = strconv.FormatBool(c.OAuthSettings != nil)
+
+	if c.OAuthSettings != nil {
+		props["EnableSignUpWithOAuth"] = strconv.FormatBool(true)
+
+		var providerNames []string
+		for providerName, _ := range c.OAuthSettings {
+			provider := einterfaces.GetOauthProvider(providerName)
+			if provider == nil {
+				continue
+			}
+			customOAuthProvider := provider.(*oauth.OAuthProvider)
+			providerNames = append(providerNames, customOAuthProvider.DisplayName)
+		}
+		props["OAuthProviderDisplayNames"] = providerNames
+	} else {
+		props["EnableSignUpWithOAuth"] = strconv.FormatBool(false)
+	}
 
 	props["ShowEmailAddress"] = strconv.FormatBool(c.PrivacySettings.ShowEmailAddress)
 

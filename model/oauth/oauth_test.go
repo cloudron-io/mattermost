@@ -27,6 +27,7 @@ func TestOAuthProvider(t *testing.T) {
     "AuthEndpoint": "https://mattermost.org/authorize",
     "TokenEndpoint": "https://mattermost.org/oauth/token",
     "UserApiEndpoint": "https://mattermost.org/v1/api/userinfo",
+    "DisplayName": "Log into test account",
     "UsernameField": "myusername",
     "EMailField": "myemail",
     "AuthDataField": "myid"
@@ -55,6 +56,10 @@ func TestOAuthProvider(t *testing.T) {
 
 	if provider.GetIdentifier() != providerName {
 		t.Fatalf("Unexpected provider identifier: %s", provider.GetIdentifier())
+	}
+
+	if provider.DisplayName == "" {
+		t.Fatalf("Missing display name")
 	}
 
 	testUser := `{

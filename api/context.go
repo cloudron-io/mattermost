@@ -34,7 +34,7 @@ type Context struct {
 type Page struct {
 	TemplateName      string
 	Props             map[string]string
-	ClientCfg         map[string]string
+	ClientCfg         map[string]interface{}
 	ClientLicense     map[string]string
 	User              *model.User
 	Team              *model.Team

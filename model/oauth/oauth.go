@@ -22,10 +22,12 @@ type OAuthProvider struct {
 	usernameField string
 	emailField    string
 	authDataField string
+	DisplayName   string
 }
 
 type OAuthProviderSettings struct {
 	model.SSOSettings
+	DisplayName   string
 	UsernameField string
 	EMailField    string
 	AuthDataField string
@@ -96,6 +98,7 @@ func LoadOAuthProviderFromSettings(settingsJSONFile string) (providerName string
 		usernameField: oauthSettings.UsernameField,
 		emailField:    oauthSettings.EMailField,
 		authDataField: oauthSettings.AuthDataField,
+		DisplayName:   oauthSettings.DisplayName,
 	}
 
 	return

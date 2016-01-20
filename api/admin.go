@@ -58,7 +58,7 @@ func getLogs(c *Context, w http.ResponseWriter, r *http.Request) {
 }
 
 func getClientConfig(c *Context, w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte(model.MapToJson(utils.ClientCfg)))
+	w.Write([]byte(utils.ClientCfg.ToJson()))
 }
 
 func logClient(c *Context, w http.ResponseWriter, r *http.Request) {

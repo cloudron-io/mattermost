@@ -6,6 +6,7 @@ package utils
 import (
 	"encoding/json"
 	"github.com/mattermost/platform/model"
+	"github.com/mattermost/platform/model/oauth"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -25,14 +26,19 @@ func TestOAuthProviderLoading(t *testing.T) {
 	}
 	defer os.RemoveAll(tempConfigDir)
 
-	jsonData, err := json.Marshal(&model.SSOSettings{
-		Enable:          true,
-		Secret:          "mysecret",
-		Id:              "myid",
-		Scope:           "authorize",
-		AuthEndpoint:    "https://mattermost.org/authorize",
-		TokenEndpoint:   "https://mattermost.org/oauth/token",
-		UserApiEndpoint: "https://mattermost.org/api/v1/userinfo",
+	jsonData, err := json.Marshal(&oauth.OAuthProviderSettings{
+		model.SSOSettings{
+			Enable:          true,
+			Secret:          "mysecret",
+			Id:              "myid",
+			Scope:           "authorize",
+			AuthEndpoint:    "https://mattermost.org/authorize",
+			TokenEndpoint:   "https://mattermost.org/oauth/token",
+			UserApiEndpoint: "https://mattermost.org/api/v1/userinfo",
+		},
+		"myusername",
+		"myemail",
+		"myid",
 	})
 	if err != nil {
 		t.Fatalf("Error marshalling temporary oauth provider json data: %s", err)
@@ -42,14 +48,19 @@ func TestOAuthProviderLoading(t *testing.T) {
 		t.Fatalf("Error writing temporary oauth provider file: %s", err)
 	}
 
-	jsonData, err = json.Marshal(&model.SSOSettings{
-		Enable:          true,
-		Secret:          "mysecret2",
-		Id:              "myid2",
-		Scope:           "authorize",
-		AuthEndpoint:    "https://mattermost.org/authorize",
-		TokenEndpoint:   "https://mattermost.org/oauth/token",
-		UserApiEndpoint: "https://mattermost.org/api/v1/userinfo",
+	jsonData, err = json.Marshal(&oauth.OAuthProviderSettings{
+		model.SSOSettings{
+			Enable:          true,
+			Secret:          "mysecret2",
+			Id:              "myid2",
+			Scope:           "authorize",
+			AuthEndpoint:    "https://mattermost.org/authorize",
+			TokenEndpoint:   "https://mattermost.org/oauth/token",
+			UserApiEndpoint: "https://mattermost.org/api/v1/userinfo",
+		},
+		"myusername",
+		"myemail",
+		"myid",
 	})
 	if err != nil {
 		t.Fatalf("Error marshalling second temporary oauth provider json data: %s", err)
@@ -59,14 +70,19 @@ func TestOAuthProviderLoading(t *testing.T) {
 		t.Fatalf("Error writing second temporary oauth provider file: %s", err)
 	}
 
-	jsonData, err = json.Marshal(&model.SSOSettings{
-		Enable:          false,
-		Secret:          "mysecret2",
-		Id:              "myid2",
-		Scope:           "authorize",
-		AuthEndpoint:    "https://mattermost.org/authorize",
-		TokenEndpoint:   "https://mattermost.org/oauth/token",
-		UserApiEndpoint: "https://mattermost.org/api/v1/userinfo",
+	jsonData, err = json.Marshal(&oauth.OAuthProviderSettings{
+		model.SSOSettings{
+			Enable:          false,
+			Secret:          "mysecret2",
+			Id:              "myid2",
+			Scope:           "authorize",
+			AuthEndpoint:    "https://mattermost.org/authorize",
+			TokenEndpoint:   "https://mattermost.org/oauth/token",
+			UserApiEndpoint: "https://mattermost.org/api/v1/userinfo",
+		},
+		"myusername",
+		"myemail",
+		"myid",
 	})
 	if err != nil {
 		t.Fatalf("Error marshalling second temporary oauth provider json data: %s", err)
@@ -82,7 +98,9 @@ func TestOAuthProviderLoading(t *testing.T) {
 		t.Fatal("Cfg.OAuthSettings unexpectedly set in default model config")
 	}
 
-	loadOAuthProviders(Cfg)
+	if err := loadOAuthProviders(Cfg); err != nil {
+		t.Fatalf("Error loading test auth providers: %s", err)
+	}
 
 	if Cfg.OAuthSettings == nil {
 		t.Fatalf("Error loading test oauth providers")

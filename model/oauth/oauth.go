@@ -5,10 +5,12 @@ package oauth
 
 import (
 	"encoding/json"
-	"github.com/mattermost/platform/einterfaces"
+	"fmt"
 	"github.com/mattermost/platform/model"
 	"io"
-	// "strings"
+	"io/ioutil"
+	"path/filepath"
+	"strings"
 )
 
 const (
@@ -16,64 +18,85 @@ const (
 )
 
 type OAuthProvider struct {
+	id            string
+	usernameField string
+	emailField    string
+	authDataField string
 }
 
-type OAuthUser struct {
-	Id       string `json:"id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	// Name     string `json:"name"`
+type OAuthProviderSettings struct {
+	model.SSOSettings
+	UsernameField string
+	EMailField    string
+	AuthDataField string
 }
 
-func init() {
-	provider := &OAuthProvider{}
-	einterfaces.RegisterOauthProvider(USER_AUTH_SERVICE_OAUTH, provider)
-}
-
-func userFromOAuthUser(glu *OAuthUser) *model.User {
-	user := &model.User{}
-	username := glu.Username
-	user.Username = model.CleanUsername(username)
-	// splitName := strings.Split(glu.Name, " ")
-	// if len(splitName) == 2 {
-	// 	user.FirstName = splitName[0]
-	// 	user.LastName = splitName[1]
-	// } else if len(splitName) >= 2 {
-	// 	user.FirstName = splitName[0]
-	// 	user.LastName = strings.Join(splitName[1:], " ")
-	// } else {
-	// 	user.FirstName = glu.Name
-	// }
-	user.Email = glu.Email
-	user.AuthData = glu.Id
-	user.AuthService = USER_AUTH_SERVICE_OAUTH
-
-	return user
-}
-
-func OAuthUserFromJson(data io.Reader) *OAuthUser {
+func userDataFromJson(data io.Reader) map[string]string {
 	decoder := json.NewDecoder(data)
-	var glu OAuthUser
-	err := decoder.Decode(&glu)
+	userData := make(map[string]string)
+	err := decoder.Decode(&userData)
 	if err == nil {
-		return &glu
+		return userData
 	} else {
 		return nil
 	}
 }
 
-func (glu *OAuthUser) getAuthData() string {
-	return glu.Id
-}
-
 func (m *OAuthProvider) GetIdentifier() string {
-	return USER_AUTH_SERVICE_OAUTH
+	return m.id
 }
 
 func (m *OAuthProvider) GetUserFromJson(data io.Reader) *model.User {
-	return userFromOAuthUser(OAuthUserFromJson(data))
+	userData := userDataFromJson(data)
+	if userData == nil {
+		return nil
+	}
+
+	user := &model.User{}
+	username := userData[m.usernameField]
+	user.Username = model.CleanUsername(username)
+	user.Email = userData[m.emailField]
+	user.AuthData = userData[m.authDataField]
+	user.AuthService = m.id
+	return user
 }
 
 func (m *OAuthProvider) GetAuthDataFromJson(data io.Reader) string {
-	return OAuthUserFromJson(data).getAuthData()
+	userData := userDataFromJson(data)
+	if userData == nil {
+		return ""
+	}
+	return userData[m.authDataField]
+}
+
+func LoadOAuthProviderFromSettings(settingsJSONFile string) (providerName string, provider *OAuthProvider, settings *model.SSOSettings, err error) {
+	var contents []byte
+	contents, err = ioutil.ReadFile(settingsJSONFile)
+	if err != nil {
+		return
+	}
+	oauthSettings := &OAuthProviderSettings{}
+	if err = json.Unmarshal(contents, &oauthSettings); err != nil {
+		err = fmt.Errorf("Error reading oauth provider file %s: %s", settingsJSONFile, err)
+		return
+	}
+
+	ssoSettings := oauthSettings.SSOSettings
+	settings = &ssoSettings
+	fileName := filepath.Base(settingsJSONFile)
+	providerName = strings.TrimSuffix(fileName, filepath.Ext(fileName))
+
+	if oauthSettings.UsernameField == "" {
+		err = fmt.Errorf("Missing UsernameField mapping entry in %s", settingsJSONFile)
+		return
+	}
+
+	provider = &OAuthProvider{
+		id:            providerName,
+		usernameField: oauthSettings.UsernameField,
+		emailField:    oauthSettings.EMailField,
+		authDataField: oauthSettings.AuthDataField,
+	}
+
+	return
 }

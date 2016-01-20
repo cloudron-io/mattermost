@@ -10,11 +10,12 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"strings"
 
 	l4g "github.com/alecthomas/log4go"
 
+	"github.com/mattermost/platform/einterfaces"
 	"github.com/mattermost/platform/model"
+	"github.com/mattermost/platform/model/oauth"
 )
 
 const (
@@ -138,23 +139,21 @@ func loadOAuthProviders(cfg *model.Config) error {
 		return fmt.Errorf("Error looking for oauth provider files in %s: %s", cfg.OAuthConfigDir, err)
 	}
 	for _, filePath := range providers {
-		contents, err := ioutil.ReadFile(filePath)
+		providerName, provider, settings, err := oauth.LoadOAuthProviderFromSettings(filePath)
 		if err != nil {
+			return fmt.Errorf("Error loading oauth provider settings from %s: %s", filePath, err)
+		}
+		if !settings.Enable {
 			continue
 		}
-		providerSettings := &model.SSOSettings{}
-		if err := json.Unmarshal(contents, &providerSettings); err != nil {
-			return fmt.Errorf("Error reading oauth provider file %s: %s", filePath, err)
+		if provider == nil {
+			return fmt.Errorf("Internal OAuth provider missing after load from settings")
 		}
-		if !providerSettings.Enable {
-			continue
-		}
-		fileName := filepath.Base(filePath)
-		providerName := strings.TrimSuffix(fileName, filepath.Ext(fileName))
 		if cfg.OAuthSettings == nil {
 			cfg.OAuthSettings = make(map[string]*model.SSOSettings)
 		}
-		cfg.OAuthSettings[providerName] = providerSettings
+		cfg.OAuthSettings[providerName] = settings
+		einterfaces.RegisterOauthProvider(providerName, provider)
 	}
 
 	return nil

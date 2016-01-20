@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	l4g "github.com/alecthomas/log4go"
 
@@ -129,6 +130,36 @@ func SaveConfig(fileName string, config *model.Config) *model.AppError {
 	return nil
 }
 
+func loadOAuthProviders(cfg *model.Config) error {
+	if cfg.OAuthConfigDir == "" {
+	}
+	providers, err := filepath.Glob(filepath.Join(cfg.OAuthConfigDir, "*.json"))
+	if err != nil {
+		return fmt.Errorf("Error looking for oauth provider files in %s: %s", cfg.OAuthConfigDir, err)
+	}
+	for _, filePath := range providers {
+		contents, err := ioutil.ReadFile(filePath)
+		if err != nil {
+			continue
+		}
+		providerSettings := &model.SSOSettings{}
+		if err := json.Unmarshal(contents, &providerSettings); err != nil {
+			return fmt.Errorf("Error reading oauth provider file %s: %s", filePath, err)
+		}
+		if !providerSettings.Enable {
+			continue
+		}
+		fileName := filepath.Base(filePath)
+		providerName := strings.TrimSuffix(fileName, filepath.Ext(fileName))
+		if cfg.OAuthSettings == nil {
+			cfg.OAuthSettings = make(map[string]*model.SSOSettings)
+		}
+		cfg.OAuthSettings[providerName] = providerSettings
+	}
+
+	return nil
+}
+
 // LoadConfig will try to search around for the corresponding config file.
 // It will search /tmp/fileName then attempt ./config/fileName,
 // then ../config/fileName and last it will look at fileName
@@ -159,6 +190,10 @@ func LoadConfig(fileName string) {
 
 	if err := config.IsValid(); err != nil {
 		panic("Error validating config file=" + fileName + ", err=" + err.Message)
+	}
+
+	if err := loadOAuthProviders(&config); err != nil {
+		l4g.Info("Error loading oauth providers: " + err.Error())
 	}
 
 	configureLog(&config.LogSettings)
@@ -207,7 +242,7 @@ func getClientConfig(c *model.Config) map[string]string {
 
 	props["EnableSignUpWithGitLab"] = strconv.FormatBool(c.GitLabSettings.Enable)
 	props["EnableSignUpWithGoogle"] = strconv.FormatBool(c.GoogleSettings.Enable)
-	props["EnableSignUpWithOAuth"] = strconv.FormatBool(c.OAuthSettings.Enable)
+	props["EnableSignUpWithOAuth"] = strconv.FormatBool(c.OAuthSettings != nil)
 
 	props["ShowEmailAddress"] = strconv.FormatBool(c.PrivacySettings.ShowEmailAddress)
 

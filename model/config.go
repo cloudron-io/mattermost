@@ -175,7 +175,8 @@ type Config struct {
 	SupportSettings   SupportSettings
 	GitLabSettings    SSOSettings
 	GoogleSettings    SSOSettings
-	OAuthSettings     SSOSettings
+	OAuthConfigDir    string
+	OAuthSettings     map[string]*SSOSettings `json:"-"`
 	LdapSettings      LdapSettings
 }
 
@@ -194,8 +195,10 @@ func (o *Config) GetSSOService(service string) *SSOSettings {
 		return &o.GitLabSettings
 	case SERVICE_GOOGLE:
 		return &o.GoogleSettings
-	case SERVICE_OAUTH:
-		return &o.OAuthSettings
+	}
+
+	if o.OAuthSettings != nil {
+		return o.OAuthSettings[service]
 	}
 
 	return nil

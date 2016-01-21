@@ -63,6 +63,7 @@ type SSOSettings struct {
 	UsernameField string
 	EMailField    string
 	AuthDataField string
+	DisplayName   string
 }
 
 type SqlSettings struct {

@@ -130,6 +130,19 @@ class SSOSignUpPage extends React.Component {
                     </span>
                 </a>
             );
+        } else if (this.props.service === Constants.OAUTH_SERVICE) {
+            var displayName = global.window.mm_config.CustomOAuthDisplayName;
+            button = (
+                <a
+                    className='btn btn-custom-login oauth btn-full'
+                    href='#'
+                    onClick={this.handleSubmit}
+                    disabled={disabled}
+                >
+                    <span className='icon'/>
+                    <span>{'Create team with ' + displayName}</span>
+                </a>
+            );
         }
 
         return (

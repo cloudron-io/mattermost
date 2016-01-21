@@ -47,6 +47,7 @@ export default class OAuthSettings extends React.Component {
         config.OAuthSettings.UsernameField = ReactDOM.findDOMNode(this.refs.UsernameField).value.trim();
         config.OAuthSettings.EMailField = ReactDOM.findDOMNode(this.refs.EMailField).value.trim();
         config.OAuthSettings.AuthDataField = ReactDOM.findDOMNode(this.refs.AuthDataField).value.trim();
+        config.OAuthSettings.DisplayName = ReactDOM.findDOMNode(this.refs.DisplayName).value.trim();
 
         Client.saveConfig(
             config,
@@ -142,6 +143,28 @@ export default class OAuthSettings extends React.Component {
                                 disabled={!this.state.Enable}
                             />
                             <p className='help-text'>{'OAuth provider name'}</p>
+                        </div>
+                    </div>
+
+                    <div className='form-group'>
+                        <label
+                            className='control-label col-sm-4'
+                            htmlFor='DisplayName'
+                        >
+                            {'Display Name:'}
+                        </label>
+                        <div className='col-sm-8'>
+                            <input
+                                type='text'
+                                className='form-control'
+                                id='DisplayName'
+                                ref='DisplayName'
+                                placeholder='Ex "myoauthprovider"'
+                                defaultValue={this.props.config.OAuthSettings.DisplayName}
+                                onChange={this.handleChange}
+                                disabled={!this.state.Enable}
+                            />
+                            <p className='help-text'>{'The string that appears in Login buttons'}</p>
                         </div>
                     </div>
 

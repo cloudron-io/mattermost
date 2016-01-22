@@ -257,6 +257,11 @@ func CreateOAuthUser(c *Context, w http.ResponseWriter, r *http.Request, service
 		return nil
 	}
 
+	if !CheckUserDomain(user, utils.Cfg.TeamSettings.RestrictCreationToDomains) {
+		c.Err = model.NewAppError("CreateOAuthUser", "The email you provided does not belong to an accepted domain. Please contact your administrator or sign up with a different email.", "")
+		return nil
+	}
+
 	suchan := Srv.Store.User().GetByAuth(team.Id, user.AuthData, service)
 	euchan := Srv.Store.User().GetByEmail(team.Id, user.Email)
 

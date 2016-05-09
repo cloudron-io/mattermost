@@ -9,9 +9,10 @@ import (
 )
 
 const (
-	CONN_SECURITY_NONE     = ""
-	CONN_SECURITY_TLS      = "TLS"
-	CONN_SECURITY_STARTTLS = "STARTTLS"
+	CONN_SECURITY_NONE      = ""
+	CONN_SECURITY_TLS       = "TLS"
+	CONN_SECURITY_STARTTLS  = "STARTTLS"
+	CONN_SECURITY_NOTLS     = "NOTLS"
 
 	IMAGE_DRIVER_LOCAL = "local"
 	IMAGE_DRIVER_S3    = "amazons3"
@@ -860,7 +861,7 @@ func (o *Config) IsValid() *AppError {
 		return NewLocAppError("Config.IsValid", "model.config.is_valid.file_salt.app_error", nil, "")
 	}
 
-	if !(o.EmailSettings.ConnectionSecurity == CONN_SECURITY_NONE || o.EmailSettings.ConnectionSecurity == CONN_SECURITY_TLS || o.EmailSettings.ConnectionSecurity == CONN_SECURITY_STARTTLS) {
+	if !(o.EmailSettings.ConnectionSecurity == CONN_SECURITY_NONE || o.EmailSettings.ConnectionSecurity == CONN_SECURITY_TLS || o.EmailSettings.ConnectionSecurity == CONN_SECURITY_STARTTLS || o.EmailSettings.ConnectionSecurity == CONN_SECURITY_NOTLS) {
 		return NewLocAppError("Config.IsValid", "model.config.is_valid.email_security.app_error", nil, "")
 	}
 
@@ -880,7 +881,7 @@ func (o *Config) IsValid() *AppError {
 		return NewLocAppError("Config.IsValid", "model.config.is_valid.rate_sec.app_error", nil, "")
 	}
 
-	if !(*o.LdapSettings.ConnectionSecurity == CONN_SECURITY_NONE || *o.LdapSettings.ConnectionSecurity == CONN_SECURITY_TLS || *o.LdapSettings.ConnectionSecurity == CONN_SECURITY_STARTTLS) {
+	if !(*o.LdapSettings.ConnectionSecurity == CONN_SECURITY_NONE || *o.LdapSettings.ConnectionSecurity == CONN_SECURITY_TLS || *o.LdapSettings.ConnectionSecurity == CONN_SECURITY_STARTTLS || *o.LdapSettings.ConnectionSecurity == CONN_SECURITY_NOTLS) {
 		return NewLocAppError("Config.IsValid", "model.config.is_valid.ldap_security.app_error", nil, "")
 	}
 

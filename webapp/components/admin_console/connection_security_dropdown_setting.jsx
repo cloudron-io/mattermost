@@ -55,6 +55,20 @@ const CONNECTION_SECURITY_HELP_TEXT = (
                     />
                 </td>
             </tr>
+            <tr>
+                <td className='help-text'>
+                    <FormattedMessage
+                        id='admin.connectionSecurityNotls'
+                        defaultMessage='NOTLS'
+                    />
+                </td>
+                <td className='help-text'>
+                    <FormattedMessage
+                        id='admin.connectionSecurityStartDescription'
+                        defaultMessage='The communication between Mattermost and your server is unencrypted.'
+                    />
+                </td>
+            </tr>
         </tbody>
     </table>
 );
@@ -67,7 +81,8 @@ export default class ConnectionSecurityDropdownSetting extends React.Component {
                 values={[
                     {value: '', text: Utils.localizeMessage('admin.connectionSecurityNone', 'None')},
                     {value: 'TLS', text: Utils.localizeMessage('admin.connectionSecurityTls', 'TLS (Recommended)')},
-                    {value: 'STARTTLS', text: Utils.localizeMessage('admin.connectionSecurityStart')}
+                    {value: 'STARTTLS', text: Utils.localizeMessage('admin.connectionSecurityStart')},
+                    {value: 'NOTLS', text: Utils.localizeMessage('admin.connectionSecurityNotls')}
                 ]}
                 label={
                     <FormattedMessage
